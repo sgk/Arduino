@@ -647,9 +647,12 @@ void USBDevice_::attach()
 	UHWCON = 0x01;						// power internal reg
 	USBCON = (1<<USBE)|(1<<FRZCLK);		// clock frozen, usb enabled
 #if F_CPU == 16000000UL
-	PLLCSR = 0x12;						// Need 16 MHz xtal
+	PLLCSR = (1<<PINDIV) | (1<<PLLE);	// Need 16 MHz xtal
 #elif F_CPU == 8000000UL
-	PLLCSR = 0x02;						// Need 8 MHz xtal
+	PLLCSR = (1<<PLLE);			// Need 8 MHz xtal
+#else
+	PLLCSR = (1<<PLLE);
+	PLLFRQ |= (1<<PINMUX);
 #endif
 	while (!(PLLCSR & (1<<PLOCK)))		// wait for lock pll
 		;

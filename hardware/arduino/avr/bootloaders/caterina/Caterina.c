@@ -191,6 +191,9 @@ void SetupHardware(void)
 
 	/* Initialize USB Subsystem */
 	USB_Init();
+#ifdef PLL_SOURCE_INTERNAL_RC
+	PLLFRQ |= (1 << PINMUX);
+#endif
 }
 
 //uint16_t ctr = 0;
