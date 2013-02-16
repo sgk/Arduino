@@ -677,6 +677,16 @@ public class Editor extends JFrame implements RunnerListener {
       });
     menu.add(item);
     
+    item = new JCheckBoxMenuItem(_("Reset on Serial Monitor"),
+	!Preferences.getBoolean("serial.noreset"));
+    item.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          ButtonModel button = ((AbstractButton)e.getSource()).getModel();
+          Preferences.setBoolean("serial.noreset", !button.isSelected());
+        }
+      });
+    menu.add(item);
+    
     addTools(menu, Base.getToolsFolder());
     File sketchbookTools = new File(Base.getSketchbookFolder(), "tools");
     addTools(menu, sketchbookTools);

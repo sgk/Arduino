@@ -207,7 +207,7 @@ public class SerialMonitor extends JFrame implements MessageConsumer {
   public void openSerialPort() throws SerialException {
     if (serial != null) return;
   
-    serial = new Serial(port, serialRate);
+    serial = new Serial((Preferences.getBoolean("serial.noreset") ? '-' + port : port), serialRate);
     serial.addListener(this);
   }
   

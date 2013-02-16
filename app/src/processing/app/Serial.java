@@ -135,6 +135,12 @@ public class Serial implements SerialPortEventListener {
     //this.parent = parent;
     //parent.attach(this);
 
+    boolean doReset = true;
+    if (iname.charAt(0) == '-') {
+      doReset = false;
+      iname = iname.substring(1);
+    }
+
     this.rate = irate;
 
     parity = SerialPort.PARITY_NONE;
@@ -159,7 +165,9 @@ public class Serial implements SerialPortEventListener {
           if (portId.getName().equals(iname)) {
             //System.out.println("looking for "+iname);
             port = (SerialPort)portId.open("serial madness", 2000);
-            port.setDTR(true);
+	    if (doReset) {
+	      port.setDTR(true);
+	    }
             port.setRTS(true);
             input = port.getInputStream();
             output = port.getOutputStream();
