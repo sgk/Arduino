@@ -153,6 +153,43 @@ public class Serial implements SerialPortEventListener {
     if (istopbits == 1.5f) stopbits = SerialPort.STOPBITS_1_5;
     if (istopbits == 2) stopbits = SerialPort.STOPBITS_2;
 
+    if (doReset) {
+      String flag = Base.getBoardPreferences().get("upload.use_1200bps_touch");
+      if (flag != null && flag.equals("true")) {
+	if (Arrays.asList(SerialPortList.getPortNames()).contains(iname)) {
+	  try {
+	    // Reset by changing the speed to the magic 1200bps.
+	    touchPort(iname, 1200);
+
+	    // Wait before port scan which may cancel the WDT reset.
+	    Thread.sleep(300);
+
+	    // Wait until the port disappears.
+	    int elapsed;
+	    for (elapsed = 0; elapsed < 500; elapsed += 250) {
+	      if (!Arrays.asList(SerialPortList.getPortNames()).contains(iname)) {
+		// disappeared.
+		break;
+	      }
+	      Thread.sleep(250);
+	    }
+
+	    // Wait until the port comes back.
+	    int timeout = (Base.isWindows() ? 5000 : 500);
+	    for (elapsed = 0; elapsed < timeout; elapsed += 250) {
+	      if (Arrays.asList(SerialPortList.getPortNames()).contains(iname)) {
+		// came back.
+		break;
+	      }
+	      Thread.sleep(250);
+	    }
+	  }
+	  catch (InterruptedException ex) {
+	  }
+	}
+      }
+    }
+
     try {
       port = null;
       @SuppressWarnings("unchecked")
