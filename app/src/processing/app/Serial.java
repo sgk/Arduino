@@ -156,7 +156,7 @@ public class Serial implements SerialPortEventListener {
     if (doReset) {
       String flag = Base.getBoardPreferences().get("upload.use_1200bps_touch");
       if (flag != null && flag.equals("true")) {
-	if (Arrays.asList(SerialPortList.getPortNames()).contains(iname)) {
+	if (Serial.list().contains(iname)) {
 	  try {
 	    // Reset by changing the speed to the magic 1200bps.
 	    touchPort(iname, 1200);
@@ -167,7 +167,7 @@ public class Serial implements SerialPortEventListener {
 	    // Wait until the port disappears.
 	    int elapsed;
 	    for (elapsed = 0; elapsed < 500; elapsed += 250) {
-	      if (!Arrays.asList(SerialPortList.getPortNames()).contains(iname)) {
+	      if (Serial.list().contains(iname)) {
 		// disappeared.
 		break;
 	      }
@@ -177,7 +177,7 @@ public class Serial implements SerialPortEventListener {
 	    // Wait until the port comes back.
 	    int timeout = (Base.isWindows() ? 5000 : 500);
 	    for (elapsed = 0; elapsed < timeout; elapsed += 250) {
-	      if (Arrays.asList(SerialPortList.getPortNames()).contains(iname)) {
+	      if (Serial.list().contains(iname)) {
 		// came back.
 		break;
 	      }
